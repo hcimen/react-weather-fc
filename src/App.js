@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import InputField from "./components/shared/InputField";
 
 const Cities = [
   {
@@ -52,17 +53,26 @@ const Cities = [
 ];
 
 function PlanToVisit(){
+
   const [plantoVisit, setplantoVisit] = useState("Next journey will be ...");
+
   const handlePlanChange = (event) => {
     setplantoVisit(event.target.value);
     console.log(event.target.value)
   }
   return(<div>
-    <label htmlFor="plan-input">Next Cities:</label>
+    <InputField
+    id="plan-input"
+    label="Next Cities:"
+    value={plantoVisit}
+    onChange={handlePlanChange}
+  />
+
+{/*     <label htmlFor="plan-input">Next Cities:</label>
     <input
       type="text"
       value={plantoVisit}
-      onChange={handlePlanChange}/>
+      onChange={handlePlanChange}/> */}
     {<p> My next vacation city will be: {plantoVisit}</p>}
     <hr />
   </div>
@@ -75,6 +85,13 @@ function App(){
     setInputValue(event.target.value);
     console.log(event.target.value)
   }
+
+  const [selectedCity, setSelectedCity] = useState("You didn't choose the city")
+  const handleSelectCity = (item) => {
+    setSelectedCity(`You chose ${item.name}`);
+    console.log(`You chose ${item.name} city`)
+  }
+
   const cityList = Cities.map((item) => ( 
     <ul> 
         City {item.id}
@@ -83,20 +100,30 @@ function App(){
       <li>Postal Code: {item.postalCode}</li>
       <li>Country: {item.country.name}</li>
       <li>Admin Area Type: {item.adminArea.type}</li>
+      <li><button
+      onClick={() => handleSelectCity(item)}> Select the City! </button></li>
       <hr />
     </div>
   </ul>
   ))
   return( <div>
     <h1> City List </h1>
+    <InputField
+        id="my-input"
+        label="Search Cities:"
+        value={inputValue}
+        onChange={handleInputChange}
+      />
+{/*     
     <label htmlFor="my-input">Search Cities:</label>
     <input
         type="text"
         id="my-input"
         value={inputValue}
-        onChange={handleInputChange}/>
+        onChange={handleInputChange}/> */}
       {<p>You typed: {inputValue}</p>}
       <hr />
+      <p> {selectedCity} </p>
 
     {cityList}
     <PlanToVisit/>
