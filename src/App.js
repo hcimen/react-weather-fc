@@ -59,10 +59,10 @@ const Cities = [
 
 function PlanToVisit(){
 
-  const [plantoVisit, setplantoVisit] = useState("Next journey will be ...");
+  const [plantoVisit, setPlantoVisit] = useState("Next journey will be ...");
 
   const handlePlanChange = (event) => {
-    setplantoVisit(event.target.value);
+    setPlantoVisit(event.target.value);
     console.log(event.target.value)
   }
   return(<div>
@@ -86,8 +86,10 @@ function App(){
     console.log(event.target.value)
   }
 
-  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedCity, setSelectedCity] = useState([]);
   const [locationKey, setLocationKey] = useState(318251);
+  const [weatherData, setWeatherData] = useState([]);
+
 
 
   const handleSelectCity = (item) => {
@@ -110,7 +112,6 @@ function App(){
           </button>
         </li>
         </ul>
-        <hr />
       </div>
   ));
 
@@ -119,18 +120,14 @@ function App(){
 // beginning of API code
 
   const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-
   const LOCATION_KEY = locationKey;
-
   const accuweatherUrl = `https://dataservice.accuweather.com/currentconditions/v1/${LOCATION_KEY}?apikey=${API_KEY}`;
-
-  const [weatherData, setWeatherData] = useState([]);
 
   async function getWeatherData() {
     try {
       const response = await axios.get(accuweatherUrl);
-      const data = response.data;
-      setWeatherData(data);
+      const data = response.data[0];
+      setWeatherData([data]);
       console.log(data);
     } catch (error) {
       console.log(error);
@@ -149,7 +146,32 @@ function App(){
 
 return (
   <div>
+    <h1> Weather FC Project </h1>
+
+  <hr />
+  
+  <p> Please choose city to see weather forecast </p>
+  <p> Selected city is {selectedCity} </p>
+
+
+    <h2>Current Weather Data for {selectedCity} </h2>
+
+      {weatherData.map((data) => (
+        <div key={data.EpochTime}>
+          <p>Temperature: {data.Temperature.Metric.Value} &#8457;</p>
+          <p>Weather: {data.WeatherText}</p>
+          <p>Date & Time: {data.LocalObservationDateTime} </p>
+          </div>
+      ))}
+  <hr />
+
     <h1> City List </h1>
+    {cityList}
+  
+  <hr />
+
+    <PlanToVisit />
+
     <InputField
       id="my-input"
       label="Search Cities:"
@@ -158,20 +180,9 @@ return (
     />
     <p>You typed: {inputValue}</p>
     <hr />
-    <p> Selected city is {selectedCity} </p>
-    {cityList}
-    <PlanToVisit />
+    
 
-
-    <h2>Current Weather Data:</h2>
-      {weatherData.map((data) => (
-        <div key={data.EpochTime}>
-          <p>Temperature: {data.Temperature.Metric.Value} &#8457;</p>
-          <p>Weather Text: {data.WeatherText}</p>
-          <p>Date & Time: {data.LocalObservationDateTime} </p>
-          </div>
-      ))}
-  
+  <hr />
   </div>
 )}
 
