@@ -158,7 +158,7 @@ return (
     />
     <p>You typed: {inputValue}</p>
     <hr />
-    <p> {selectedCity} </p>
+    <p> Selected city is {selectedCity} </p>
     {cityList}
     <PlanToVisit />
 
